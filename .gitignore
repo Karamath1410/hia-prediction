@@ -1,0 +1,47 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environment
+venv/
+env/
+.env/
+.venv/
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# Data (raw data should not be committed — download via TDC)
+data/raw/
+data/processed/*.csv
+
+# Results (large files)
+results/figures/*.png
+results/shap/*.npy
+
+# Models (saved model binaries can be large)
+*.pkl
+*.joblib
+*.pt
+*.pth
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+logs/
