@@ -1,0 +1,7 @@
+Feature,Rule,Threshold,Mean (High Absorption),Mean (Low Absorption),% Violating in High-Absorption Class,% Violating in Low-Absorption Class
+Molecular Weight,Lipinski,<= 500,319.15,393.86,3.3,25.9
+LogP (Lipophilicity),Lipinski,<= 5,2.18,-1.08,2.2,3.7
+H-Bond Donors,Lipinski,<= 5,1.39,5.07,0.0,37.0
+H-Bond Acceptors,Lipinski,<= 10,4.19,7.59,1.1,29.6
+TPSA (Polar Surface Area),Veber,<= 140,71.33,158.76,3.3,51.9
+Rotatable Bonds,Veber,<= 10,4.03,5.85,5.6,3.7

@@ -1,0 +1,4 @@
+category,smiles,true_label,predicted_label,probability_high,top_features
+High Absorption Correct,CCN1C[C@@H](C(=O)O)C(=O)c2ccc(C)nc21,1,1,0.9992,"[('TPSA (Polar Surface Area)', 1.6937), ('H-Bond Donors', 1.1125), ('Molecular Weight', 0.8421)]"
+Low Absorption Correct,NC[C@@H]1O[C@@H](O[C@@H]2[C@@H](N)C[C@H](N)[C@H](O[C@@H]3O[C@@H](CO)[C@@H](O)[C@H](N)[C@@H]3O)[C@H]2O)[C@@H](N)C[C@@H]1O,0,0,0.0149,"[('TPSA (Polar Surface Area)', -1.7505), ('H-Bond Acceptors', 1.0635), ('LogP (Lipophilicity)', -0.9868)]"
+Misclassified,COc1cc2c3cc1Oc1cc(ccc1O)C[C@@H]1c4c(cc(OC)c(O)c4Oc4ccc(cc4)C[C@@H]3[N+](C)(C)CC2)CC[N+]1(C)C,0,1,0.8392,"[('Molecular Weight', -2.0161), ('H-Bond Acceptors', 1.0633), ('TPSA (Polar Surface Area)', 0.9709)]"
