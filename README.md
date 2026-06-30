@@ -17,6 +17,19 @@ This project builds an accurate and interpretable machine learning pipeline to p
 
 ---
 
+## Dataset Summary
+
+| Split | Size | Notes |
+|---|---|---|
+| Train | 404 molecules | Class distribution: 360 High (1) / 44 Low (0) |
+| Validation | 57 molecules | Scaffold-based split |
+| Test | 117 molecules | Scaffold-based split |
+| **Total** | **578 molecules** | HIA_Hou benchmark from TDC |
+
+Class imbalance in the training set was addressed using **SMOTE**, which balanced the training data to 720 samples (360 per class).
+
+---
+
 ## Models Implemented
 
 | Model | Type |
@@ -24,8 +37,47 @@ This project builds an accurate and interpretable machine learning pipeline to p
 | Logistic Regression | Classical ML (baseline) |
 | Random Forest | Ensemble (classical ML) |
 | XGBoost | Gradient Boosting |
-| LightGBM | Gradient Boosting |
-| GNN (MPNN/GCN) | Graph Neural Network |
+| **LightGBM** | Gradient Boosting (best performer) |
+
+---
+
+## Key Results
+
+Performance on the held-out **test set** (117 molecules):
+
+| Model | ROC-AUC | F1-Score | Accuracy | MCC |
+|---|---|---|---|---|
+| Logistic Regression | 0.7737 | 0.8208 | 0.7350 | 0.3196 |
+| Random Forest | 0.8368 | 0.8973 | 0.8376 | 0.5152 |
+| XGBoost | 0.8473 | 0.9130 | 0.8632 | 0.5968 |
+| **LightGBM** | **0.8667** | **0.9149** | **0.8632** | 0.5839 |
+
+**Best model: LightGBM**, with the highest ROC-AUC (0.8667) and F1-score (0.9149) on the test set. XGBoost is a close second and was used for the SHAP explainability analysis due to its strong, well-documented `TreeExplainer` support.
+
+---
+
+## SHAP Explainability Results
+
+SHAP (TreeExplainer) was applied to the XGBoost model to identify the molecular features driving HIA predictions. Ranked by mean absolute SHAP value:
+
+| Rank | Feature | Mean \|SHAP\| |
+|---|---|---|
+| 1 | TPSA (Topological Polar Surface Area) | 1.1135 |
+| 2 | Hydrogen Bond Donors | 0.7665 |
+| 3 | Hydrogen Bond Acceptors | 0.6707 |
+| 4 | Rotatable Bonds | 0.6205 |
+| 5 | LogP (Lipophilicity) | 0.6027 |
+| 6 | Molecular Weight | 0.4899 |
+| 7 | Heteroatom Count | 0.3897 |
+| 8 | Ring Count | 0.3676 |
+| 9 | Fraction CSP3 | 0.3183 |
+| 10 | Molar Refractivity | 0.2977 |
+| 11 | Heavy Atom Count | 0.2920 |
+| 12 | Aromatic Rings | 0.1963 |
+
+**TPSA emerged as the single most important predictor**, consistent with established pharmacokinetic theory — molecules with high polar surface area struggle to cross the lipid-rich intestinal membrane, resulting in lower absorption.
+
+SHAP visualisations (summary plot, bar plot, and per-molecule waterfall plot) are saved in `results/figures/`.
 
 ---
 
@@ -35,22 +87,20 @@ This project builds an accurate and interpretable machine learning pipeline to p
 hia-prediction/
 │
 ├── data/
-│   ├── raw/                  # Original HIA_Hou dataset (downloaded via TDC)
-│   └── processed/            # Cleaned + feature-engineered data (CSV)
+│   ├── raw/                  # HIA_Hou dataset splits downloaded via TDC
+│   └── processed/            # RDKit-computed feature matrices (train/valid/test)
 │
 ├── notebooks/
 │   ├── 01_eda.ipynb           # Exploratory Data Analysis
 │   ├── 02_feature_engineering.ipynb
 │   ├── 03_classical_ml.ipynb  # LR, RF, XGBoost, LightGBM
-│   ├── 04_gnn.ipynb           # Graph Neural Network
 │   └── 05_shap_analysis.ipynb # SHAP explainability
 │
 ├── src/
 │   ├── features/
 │   │   └── compute_descriptors.py   # RDKit molecular descriptor computation
 │   ├── models/
-│   │   ├── train_classical.py        # Train LR, RF, XGBoost, LightGBM
-│   │   └── train_gnn.py              # Train GNN model
+│   │   └── train_classical.py        # Train LR, RF, XGBoost, LightGBM
 │   ├── explainability/
 │   │   └── shap_analysis.py          # SHAP global + local explanations
 │   └── utils/
@@ -58,15 +108,12 @@ hia-prediction/
 │       └── evaluation.py             # Metrics: AUC, F1, MCC, etc.
 │
 ├── results/
-│   ├── figures/              # All plots (ROC curves, SHAP plots, etc.)
-│   ├── metrics/              # Model performance CSVs
-│   └── shap/                 # SHAP values and summary plots
+│   ├── figures/               # ROC curves, SHAP summary/bar/waterfall plots
+│   ├── metrics/                # classical_results.csv + saved model files
+│   └── shap/                   # Raw SHAP values (CSV)
 │
 ├── tests/
-│   └── test_descriptors.py   # Unit tests
-│
 ├── docs/
-│   └── project_documentation.docx
 │
 ├── requirements.txt
 ├── .gitignore
@@ -79,36 +126,21 @@ hia-prediction/
 
 ### 1. Clone the repository
 ```bash
-git clone https://github.com/YOUR_USERNAME/hia-prediction.git
+git clone https://github.com/Karamath1410/hia-prediction.git
 cd hia-prediction
 ```
 
-### 2. Create a virtual environment
-```bash
-python -m venv venv
-source venv/bin/activate        # On Mac/Linux
-venv\Scripts\activate           # On Windows
-```
-
-### 3. Install dependencies
+### 2. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Run data processing
+### 3. Run the pipeline end to end
 ```bash
-python src/features/compute_descriptors.py
-```
-
-### 5. Train models
-```bash
-python src/models/train_classical.py
-python src/models/train_gnn.py
-```
-
-### 6. Run SHAP analysis
-```bash
-python src/explainability/shap_analysis.py
+python src/utils/data_loader.py            # Download HIA_Hou dataset
+python src/features/compute_descriptors.py # Compute RDKit descriptors
+python src/models/train_classical.py        # Train LR, RF, XGBoost, LightGBM
+python src/explainability/shap_analysis.py  # Run SHAP analysis
 ```
 
 ---
@@ -117,21 +149,17 @@ python src/explainability/shap_analysis.py
 
 - All random seeds are fixed at `SEED = 42`
 - Dataset splits use TDC scaffold-based splitting
-- All results are saved to `results/` with versioned filenames
+- Class imbalance handled with SMOTE on the training set only
+- All results, trained models, and SHAP values are saved under `results/`
 
 ---
 
-## Key Results
+## Next Steps
 
-> *(To be updated as experiments are completed)*
-
-| Model | ROC-AUC | F1-Score | MCC |
-|---|---|---|---|
-| Logistic Regression | - | - | - |
-| Random Forest | - | - | - |
-| XGBoost | - | - | - |
-| LightGBM | - | - | - |
-| GNN (MPNN) | - | - | - |
+- Implement and benchmark Graph Neural Network (GNN/MPNN) models against classical ML
+- Expand SHAP analysis with local (per-molecule) explanations for representative compounds
+- Validate top SHAP features against Lipinski's Rule of Five and known pharmacokinetic thresholds
+- Write up full results and discussion in the project thesis
 
 ---
 
