@@ -46,3 +46,4 @@ Thumbs.db
 *.log
 logs/
 "results/metrics/chemberta_finetuned/model.safetensors" 
+"results/metrics/chemberta_finetuned/" 
