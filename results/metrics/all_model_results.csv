@@ -13,3 +13,4 @@ Attentive FP,valid,0.9829,0.9485,0.9123,0.6706
 Attentive FP,test,0.9568,0.9006,0.8547,0.6458
 ChemBERTa,valid,0.9429,0.9495,0.9123,0.6182
 ChemBERTa,test,0.9128,0.8824,0.8291,0.5873
+Hybrid (Multimodal),test,0.9588,0.9249,0.8889,0.7217
