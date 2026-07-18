@@ -1,0 +1,20 @@
+category,true_label,predicted,probability,correct,element,count,mean_importance
+Correct High Absorption 1,1,1,0.9958,True,O,4,-0.3611
+Correct High Absorption 1,1,1,0.9958,True,N,8,0.0171
+Correct High Absorption 1,1,1,0.9958,True,Cl,2,0.2309
+Correct High Absorption 1,1,1,0.9958,True,C,35,0.2879
+Correct High Absorption 2,1,1,0.9931,True,N,1,-0.2278
+Correct High Absorption 2,1,1,0.9931,True,O,3,-0.1394
+Correct High Absorption 2,1,1,0.9931,True,C,24,0.2909
+Correct Low Absorption 1,0,0,0.0004,True,N,2,-4.695
+Correct Low Absorption 1,0,0,0.0004,True,O,6,-0.2108
+Correct Low Absorption 1,0,0,0.0004,True,C,38,0.1655
+Correct Low Absorption 2,0,0,0.0026,True,N,2,-5.2247
+Correct Low Absorption 2,0,0,0.0026,True,C,15,0.3178
+False Positive,0,1,0.8505,False,N,1,-0.3492
+False Positive,0,1,0.8505,False,O,4,-0.2509
+False Positive,0,1,0.8505,False,S,1,-0.1284
+False Positive,0,1,0.8505,False,C,5,0.5923
+False Negative,1,0,0.0369,False,N,3,-1.3857
+False Negative,1,0,0.0369,False,O,6,-0.1643
+False Negative,1,0,0.0369,False,C,19,0.1741
